@@ -83,4 +83,24 @@ export class AuthService {
             refresh_token: data.session?.refresh_token,
         };
     }
+
+    async changePassword(accessToken: string, newPassword: string) {
+        // Obtén el usuario autenticado con el token
+        const { data: userData, error: getUserError } = await supabase.auth.getUser(accessToken);
+        if (getUserError || !userData.user) {
+            throw new UnauthorizedException('No se pudo obtener el usuario');
+        }
+        // Actualiza la contraseña del usuario con el método de Supabase
+        const { data, error } = await supabase.auth.updateUser({
+            password: newPassword,
+        });
+        if (error) {
+            throw new UnauthorizedException(error.message);
+        }
+        return {
+            message: 'Contraseña actualizada correctamente',
+            user: data.user,
+        };
+    }
+
 }
