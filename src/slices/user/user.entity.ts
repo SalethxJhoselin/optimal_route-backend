@@ -1,3 +1,4 @@
+import { IsUUID } from 'class-validator';
 import { UserWorkStatus } from 'src/enums/user_state.enum';
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { DeliveryVehicle } from '../delivery_vehicle/delivery_vehicle';
@@ -6,6 +7,7 @@ import { Role } from '../role/role.entity';
 @Entity('user')
 export class User {
     @PrimaryGeneratedColumn('uuid')
+    @IsUUID()
     id: string;
 
     @Column()
@@ -13,6 +15,9 @@ export class User {
 
     @Column({ unique: true })
     email: string;
+
+    @Column({ nullable: true })
+    phone_number: number;
 
     @Column({
         type: 'enum',
