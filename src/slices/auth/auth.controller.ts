@@ -1,4 +1,5 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
@@ -9,6 +10,7 @@ import { RegisterGuard } from './guards/register.guard';
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
+    @ApiBearerAuth()
     @UseGuards(RegisterGuard)
     @Post('register')
     async register(@Body() dto: RegisterDto, @Req() req) {
