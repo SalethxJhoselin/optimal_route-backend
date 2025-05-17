@@ -1,7 +1,7 @@
 import { IsUUID } from 'class-validator';
 import { UserWorkStatus } from 'src/enums/user_state.enum';
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { DeliveryVehicle } from '../delivery_vehicle/delivery_vehicle';
+import { DeliveryVehicle } from '../delivery_vehicle/delivery_vehicle.entity';
 import { Role } from '../role/role.entity';
 
 @Entity('user')

@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DeliveryOrder } from '../slices/delivery_order/delivery_order.entity';
-import { DeliveryVehicle } from '../slices/delivery_vehicle/delivery_vehicle';
+import { DeliveryVehicle } from '../slices/delivery_vehicle/delivery_vehicle.entity';
 import { Location } from '../slices/location/location.enity';
 import { Order } from '../slices/order/order.entity';
 import { Payment } from '../slices/payment/payment.entity';

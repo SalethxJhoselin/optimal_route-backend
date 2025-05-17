@@ -25,7 +25,7 @@ export class DeliveryVehicle {
   @Column({
     type: 'enum',
     enum: VehicleState,
-    default: VehicleState.OPERATIONAL
+    default: VehicleState.NON_OPERATIONAL
   })
   state: VehicleState;
 

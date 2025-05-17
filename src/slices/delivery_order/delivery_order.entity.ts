@@ -1,6 +1,6 @@
 import { DeliveryOrderState } from 'src/enums/delivery_order.enum';
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { DeliveryVehicle } from '../delivery_vehicle/delivery_vehicle';
+import { DeliveryVehicle } from '../delivery_vehicle/delivery_vehicle.entity';
 import { Order } from '../order/order.entity';
 
 @Entity('delivery_order')
