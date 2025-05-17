@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import fetch from 'node-fetch';
 import { UserWorkStatus } from 'src/enums/user_state.enum';
 import { supabase } from 'src/shared/supabase.client';
 import { Repository } from 'typeorm';
@@ -100,6 +101,47 @@ export class AuthService {
         return {
             message: 'Contraseña actualizada correctamente',
             user: data.user,
+        };
+    }
+
+    async requestPasswordReset(email: string) {
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'http://localhost:3000/auth/update-password', // Cambiar esta URL para el frontend
+        });
+
+        if (error) {
+            throw new UnauthorizedException(error.message);
+        }
+
+        return {
+            message: 'Correo de recuperación enviado. Por favor revisa tu bandeja de entrada.',
+        };
+    }
+
+    // Este método se llama desde el frontend después de que el usuario hace clic en el enlace del correo
+    //recomendable manejarlo desde el frontend TODO: corregir
+    async updatePasswordWithToken(newPassword: string, accessToken: string) {
+        const supabaseUrl = process.env.SUPABASE_URL;
+
+        const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: newPassword }),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json() as { message?: string };
+            throw new UnauthorizedException('Error al actualizar contraseña: ' + (errorData.message || res.statusText));
+        }
+
+        const data = await res.json();
+
+        return {
+            message: 'Contraseña actualizada correctamente',
+            user: data,
         };
     }
 
