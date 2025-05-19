@@ -1,5 +1,12 @@
 import { DeliveryOrderState } from 'src/enums/delivery_order.enum';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { DeliveryVehicle } from '../delivery_vehicle/delivery_vehicle.entity';
 import { Order } from '../order/order.entity';
 
@@ -11,14 +18,16 @@ export class DeliveryOrder {
   @Column({
     type: 'enum',
     enum: DeliveryOrderState,
-    default: DeliveryOrderState.ASSIGNED
+    default: DeliveryOrderState.ASSIGNED,
   })
   delivery_state: DeliveryOrderState;
 
-  @ManyToOne(() => Order, order => order.deliveryOrders, { nullable: false })
+  @ManyToOne(() => Order, (order) => order.deliveryOrders, { nullable: false })
   order: Order;
 
-  @ManyToOne(() => DeliveryVehicle, dv => dv.deliveryOrders, { nullable: false })
+  @ManyToOne(() => DeliveryVehicle, (dv) => dv.deliveryOrders, {
+    nullable: false,
+  })
   deliveryVehicle: DeliveryVehicle;
 
   @CreateDateColumn()
