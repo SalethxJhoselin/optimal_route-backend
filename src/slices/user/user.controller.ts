@@ -22,10 +22,7 @@ export class UserController {
     }
 
     @Patch(':id')
-    update(
-        @Param('id', ParseUUIDPipe) id: string,
-        @Body() dto: UpdateUserDto,
-    ): Promise<User> {
+    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateUserDto,): Promise<User> {
         return this.userService.update(id, dto);
     }
 
