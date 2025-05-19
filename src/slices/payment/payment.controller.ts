@@ -1,7 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './payment.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { SupabaseAuthGuard } from '../auth/guards/supabase-auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(SupabaseAuthGuard)
 @Controller('payments')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
