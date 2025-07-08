@@ -12,8 +12,6 @@ import { SupabaseAuthGuard } from './guards/supabase-auth.guard';
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
-    @ApiBearerAuth()
-    @UseGuards()
     @Post('register')
     async register(@Body() dto: RegisterDto, @Req() req) {
         return this.authService.register(dto);
