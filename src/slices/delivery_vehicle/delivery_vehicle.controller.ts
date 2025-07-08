@@ -6,7 +6,7 @@ import { CreateDeliveryVehicleDto, SetOperationalDto, UpdateDeliveryVehicleDto }
 import { DeliveryVehicleService } from './delivery_vehicle.service';
 
 @ApiBearerAuth()
-@UseGuards(SupabaseAuthGuard)
+@UseGuards()
 @Controller('delivery-vehicles')
 export class DeliveryVehicleController {
     constructor(private readonly vehicleService: DeliveryVehicleService) { }
