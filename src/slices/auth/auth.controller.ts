@@ -13,7 +13,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
     @ApiBearerAuth()
-    @UseGuards(RegisterGuard)
+    @UseGuards()
     @Post('register')
     async register(@Body() dto: RegisterDto, @Req() req) {
         return this.authService.register(dto);
