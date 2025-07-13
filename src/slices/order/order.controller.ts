@@ -22,6 +22,21 @@ export class OrderController {
         return this.orderService.findOne(id);
     }
 
+    @ApiBody({ type: () => CreateOrderWithLocationDto })
+    @Post()
+    async create(@Body() dto: CreateOrderWithLocationDto) {
+        return this.orderService.create(dto);
+    }
+
+    @Patch(':id')
+    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateOrderDto) {
+        return this.orderService.update(id, dto);
+    }
+
+    @Delete(':id')
+    delete(@Param('id', ParseUUIDPipe) id: string) {
+        return this.orderService.delete(id);
+    }
     @Get('user/:userId')
     findAllByUser(@Param('userId', ParseUUIDPipe) userId: string) {
         return this.orderService.findAllByUser(userId);
@@ -41,21 +56,5 @@ export class OrderController {
         @Param('state') state: OrderState,
     ) {
         return this.orderService.findAllByUserState(userId, state);
-    }
-
-    @ApiBody({ type: () => CreateOrderWithLocationDto })
-    @Post()
-    async create(@Body() dto: CreateOrderWithLocationDto) {
-        return this.orderService.create(dto);
-    }
-
-    @Patch(':id')
-    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateOrderDto) {
-        return this.orderService.update(id, dto);
-    }
-
-    @Delete(':id')
-    delete(@Param('id', ParseUUIDPipe) id: string) {
-        return this.orderService.delete(id);
     }
 }
