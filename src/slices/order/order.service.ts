@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderState } from 'src/enums/order_state.enum';
 import { Repository } from 'typeorm';
 import { LocationService } from '../location/location.service';
 import { CreateOrderWithLocationDto, UpdateOrderDto } from './order.dto';
 import { Order } from './order.entity';
+import { OrderState } from 'src/enums/order_state.enum';
 
 @Injectable()
 export class OrderService {
