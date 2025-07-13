@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
 import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { OrderState } from 'src/enums/order_state.enum';
 import { SupabaseAuthGuard } from '../auth/guards/supabase-auth.guard';
 import { CreateOrderWithLocationDto, UpdateOrderDto } from './order.dto';
 import { OrderService } from './order.service';

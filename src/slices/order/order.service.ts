@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { OrderState } from 'src/enums/order_state.enum';
 import { Repository } from 'typeorm';
 import { LocationService } from '../location/location.service';
 import { CreateOrderWithLocationDto, UpdateOrderDto } from './order.dto';
@@ -34,13 +35,15 @@ export class OrderService {
     }
 
     async findAll(): Promise<Order[]> {
-        return this.orderRepo.find({ relations: [
-            'location', 
-            'payments', 
-            'deliveryOrders',
-            'deliveryOrders.deliveryVehicle',
-            'deliveryOrders.deliveryVehicle.user'
-        ]});
+        return this.orderRepo.find({
+            relations: [
+                'location',
+                'payments',
+                'deliveryOrders',
+                'deliveryOrders.deliveryVehicle',
+                'deliveryOrders.deliveryVehicle.user'
+            ]
+        });
     }
 
     async findOne(id: string): Promise<Order> {
@@ -80,9 +83,9 @@ export class OrderService {
     }
     async findAllByUser(userId: string): Promise<Order[]> {
         return this.orderRepo.find(
-            { 
-                where: { deliveryOrders: { deliveryVehicle: { user: {id: userId } } } }, 
-                relations: ['location', 'payments', 'deliveryOrders'] 
+            {
+                where: { deliveryOrders: { deliveryVehicle: { user: { id: userId } } } },
+                relations: ['location', 'payments', 'deliveryOrders']
             }
         );
     }
@@ -99,7 +102,7 @@ export class OrderService {
             },
             relations: ['location', 'payments', 'deliveryOrders'],
         });
-        if (!order) throw new NotFoundException(Order for user ${userId} with state ${state} not found);
+        if (!order) throw new NotFoundException(`Order for user ${userId} with state ${state} not found`);
         return order;
     }
 
