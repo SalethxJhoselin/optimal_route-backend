@@ -8,6 +8,7 @@ import { DeliveryVehicleModule } from './slices/delivery_vehicle/delivery_vehicl
 import { OrderModule } from './slices/order/order.module';
 import { PaymentModule } from './slices/payment/payment.module';
 import { UserModule } from './slices/user/user.module';
+import { StripeModule } from './slices/stripe/stripe.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './slices/user/user.module';
     DeliveryOrderModule,
     OrderModule,
     PaymentModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
