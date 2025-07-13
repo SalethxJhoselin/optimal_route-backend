@@ -34,7 +34,13 @@ export class OrderService {
     }
 
     async findAll(): Promise<Order[]> {
-        return this.orderRepo.find({ relations: ['location', 'payments', 'deliveryOrders'] });
+        return this.orderRepo.find({ relations: [
+            'location', 
+            'payments', 
+            'deliveryOrders',
+            'deliveryOrders.deliveryVehicle',
+            'deliveryOrders.deliveryVehicle.user'
+        ]});
     }
 
     async findOne(id: string): Promise<Order> {
@@ -71,5 +77,43 @@ export class OrderService {
     async delete(id: string): Promise<void> {
         const order = await this.findOne(id);
         await this.orderRepo.remove(order);
+    }
+    async findAllByUser(userId: string): Promise<Order[]> {
+        return this.orderRepo.find(
+            { 
+                where: { deliveryOrders: { deliveryVehicle: { user: {id: userId } } } }, 
+                relations: ['location', 'payments', 'deliveryOrders'] 
+            }
+        );
+    }
+
+    async findOneByUserState(userId: string, state: OrderState): Promise<Order> {
+        const order = await this.orderRepo.findOne({
+            where: {
+                deliveryOrders: {
+                    deliveryVehicle: {
+                        user: { id: userId },
+                    },
+                },
+                state: state,
+            },
+            relations: ['location', 'payments', 'deliveryOrders'],
+        });
+        if (!order) throw new NotFoundException(Order for user ${userId} with state ${state} not found);
+        return order;
+    }
+
+    async findAllByUserState(userId: string, state: Order['state']): Promise<Order[]> {
+        return this.orderRepo.find({
+            where: {
+                deliveryOrders: {
+                    deliveryVehicle: {
+                        user: { id: userId },
+                    },
+                },
+                state: state,
+            },
+            relations: ['location', 'payments', 'deliveryOrders'],
+        });
     }
 }
