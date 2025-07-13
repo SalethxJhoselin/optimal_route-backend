@@ -4,7 +4,6 @@ import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { SupabaseAuthGuard } from '../auth/guards/supabase-auth.guard';
 import { CreateOrderWithLocationDto, UpdateOrderDto } from './order.dto';
 import { OrderService } from './order.service';
-import { Order } from './order.entity';
 import { OrderState } from 'src/enums/order_state.enum';
 
 @ApiBearerAuth()
