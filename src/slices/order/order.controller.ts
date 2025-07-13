@@ -36,4 +36,24 @@ export class OrderController {
     delete(@Param('id', ParseUUIDPipe) id: string) {
         return this.orderService.delete(id);
     }
+    @Get('user/:userId')
+    findAllByUser(@Param('userId', ParseUUIDPipe) userId: string) {
+        return this.orderService.findAllByUser(userId);
+    }
+
+    @Get('user/:userId/state/:state')
+    findOneByUserState(
+        @Param('userId', ParseUUIDPipe) userId: string,
+        @Param('state') state: OrderState,
+    ) {
+        return this.orderService.findOneByUserState(userId, state);
+    }
+
+    @Get('userAll/:userId/state/:state')
+    findAllByUserState(
+        @Param('userId', ParseUUIDPipe) userId: string,
+        @Param('state') state: OrderState,
+    ) {
+        return this.orderService.findAllByUserState(userId, state);
+    }
 }
