@@ -4,6 +4,8 @@ import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { SupabaseAuthGuard } from '../auth/guards/supabase-auth.guard';
 import { CreateOrderWithLocationDto, UpdateOrderDto } from './order.dto';
 import { OrderService } from './order.service';
+import { Order } from './order.entity';
+import { OrderState } from 'src/enums/order_state.enum';
 
 @ApiBearerAuth()
 @UseGuards(SupabaseAuthGuard)
@@ -19,6 +21,27 @@ export class OrderController {
     @Get(':id')
     findOne(@Param('id', ParseUUIDPipe) id: string) {
         return this.orderService.findOne(id);
+    }
+
+    @Get('user/:userId')
+    findAllByUser(@Param('userId', ParseUUIDPipe) userId: string) {
+        return this.orderService.findAllByUser(userId);
+    }
+
+    @Get('user/:userId/state/:state')
+    findOneByUserState(
+        @Param('userId', ParseUUIDPipe) userId: string,
+        @Param('state') state: OrderState,
+    ) {
+        return this.orderService.findOneByUserState(userId, state);
+    }
+
+    @Get('userAll/:userId/state/:state')
+    findAllByUserState(
+        @Param('userId', ParseUUIDPipe) userId: string,
+        @Param('state') state: OrderState,
+    ) {
+        return this.orderService.findAllByUserState(userId, state);
     }
 
     @ApiBody({ type: () => CreateOrderWithLocationDto })
