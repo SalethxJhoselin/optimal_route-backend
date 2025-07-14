@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -41,5 +42,11 @@ export class DeliveryOrderController {
   @Get()
   findAll() {
     return this.deliveryOrderService.findAll();
+  }
+
+  // Eliminar una entrega
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.deliveryOrderService.delete(id);
   }
 }

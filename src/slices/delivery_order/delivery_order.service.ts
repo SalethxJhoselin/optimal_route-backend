@@ -55,4 +55,12 @@ export class DeliveryOrderService {
   async findAll(): Promise<DeliveryOrder[]> {
     return this.deliveryOrderRepo.find();
   }
+
+
+  async delete(id: string): Promise<void> {
+    const deliveryOrder = await this.deliveryOrderRepo.findOneBy({ id });
+    if (!deliveryOrder) throw new NotFoundException('Entrega no encontrada');
+
+    await this.deliveryOrderRepo.remove(deliveryOrder);
+  }
 }
