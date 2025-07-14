@@ -55,3 +55,9 @@ export class SetOperationalDto {
     @IsUUID()
     vehicleId: string;
 }
+
+export class ReceiveLocationDto {
+    deliveryVehicleId: string;
+    lat: number;
+    lng: number;
+}

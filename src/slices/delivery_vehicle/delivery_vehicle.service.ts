@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { OrderState } from 'src/enums/order_state.enum';
 import { VehicleState } from 'src/enums/vehicle_state.enum';
+import { getDistanceFromLatLonInKm } from 'src/utils/distance.util';
 import { Repository } from 'typeorm';
+import { Order } from '../order/order.entity';
+import { OrderService } from '../order/order.service';
 import { User } from '../user/user.entity';
 import { CreateDeliveryVehicleDto, UpdateDeliveryVehicleDto } from './delivery_vehicle.dto';
 import { DeliveryVehicle } from './delivery_vehicle.entity';
@@ -14,6 +18,8 @@ export class DeliveryVehicleService {
 
         @InjectRepository(User)
         private userRepo: Repository<User>,
+
+        private readonly orderService: OrderService,
     ) { }
 
     async findAll(): Promise<DeliveryVehicle[]> {
@@ -89,5 +95,63 @@ export class DeliveryVehicleService {
             where: { user: { id: userId } },
             relations: ['user'],
         });
+    }
+
+    async receiveLocation(
+        deliveryVehicleId: string,
+        lat: number,
+        lng: number,
+    ): Promise<{
+        message: string;
+        pendingOrders: Order[];
+        capacity: number;
+    }> {
+        const vehicle = await this.vehicleRepo.findOne({
+            where: { id: deliveryVehicleId },
+            relations: ['user'],
+        });
+
+        if (!vehicle) throw new NotFoundException(`Vehicle with id ${deliveryVehicleId} not found`);
+
+        console.log(`Ubicación recibida: Vehículo ${deliveryVehicleId}, lat=${lat}, lng=${lng}`);
+
+        const pendingOrders = await this.orderService['orderRepo'].find({
+            where: { state: OrderState.PENDING },
+            relations: ['location', 'payments', 'deliveryOrders', 'deliveryOrders.deliveryVehicle'],
+        });
+
+        // 1. Calcular distancia desde la movilidad a cada orden
+        const ordersWithDistance = pendingOrders.map(order => {
+            const orderLat = order.location.latitude;
+            const orderLng = order.location.longitude;
+            const distance = getDistanceFromLatLonInKm(lat, lng, orderLat, orderLng);
+            return { ...order, distance };
+        });
+
+        // 2. Ordenar por distancia (más cercana primero)
+        ordersWithDistance.sort((a, b) => a.distance - b.distance);
+
+        // 3. Seleccionar solo las órdenes cuya suma de volumen ≤ capacidad
+        const selectedOrders: Order[] = [];
+        let currentVolume = 0;
+        const maxCapacity = vehicle.capacity;
+
+        for (const order of ordersWithDistance) {
+            if (currentVolume + order.volume <= maxCapacity) {
+                selectedOrders.push(order);
+                currentVolume += order.volume;
+            } else {
+                break; // detener si excede la capacidad
+            }
+        }
+
+        // 4. Eliminar el campo distance (opcional)
+        // const finalOrders = selectedOrders.map(({ distance, ...order }) => order);
+
+        return {
+            message: 'Envío exitoso de ubicación',
+            pendingOrders: selectedOrders,
+            capacity: vehicle.capacity,
+        };
     }
 }

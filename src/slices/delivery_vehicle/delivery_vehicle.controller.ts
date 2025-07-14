@@ -1,8 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, } from '@nestjs/common';
-import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { SupabaseAuthGuard } from '../auth/guards/supabase-auth.guard';
-import { CreateDeliveryVehicleDto, SetOperationalDto, UpdateDeliveryVehicleDto } from './delivery_vehicle.dto';
+import { CreateDeliveryVehicleDto, ReceiveLocationDto, SetOperationalDto, UpdateDeliveryVehicleDto } from './delivery_vehicle.dto';
 import { DeliveryVehicleService } from './delivery_vehicle.service';
 
 
@@ -43,5 +40,10 @@ export class DeliveryVehicleController {
     @Get('user/:userId')
     async findByUser(@Param('userId', ParseUUIDPipe) userId: string,) {
         return this.vehicleService.findByUserId(userId);
+    }
+
+    @Post('obtener-ubicacion')
+    async recibirUbicacion(@Body() dto: ReceiveLocationDto) {
+        return this.vehicleService.receiveLocation(dto.deliveryVehicleId, dto.lat, dto.lng);
     }
 }
